@@ -153,3 +153,39 @@ def startDimming(buttonNumber, direction) {
     // log.debug "startLevels: ${startLevels}"
     doDimming(buttonDevices, startLevels, increment)
 }
+
+def doDimming(buttonDevices, startLevels, increment) {
+    // log.debug "Dimming ${buttonDevices} from ${startLevels} by ${increment}"
+    for (;;) {
+        def newLevels = []
+        buttonDevices.eachWithIndex {device, i -> 
+            def workingLevel = startLevels[i]
+            // log.debug "Current level for ${device} is ${workingLevel}"
+            workingLevel += increment
+            // log.debug "New level for ${device} is ${workingLevel}"
+            workingLevel = (workingLevel < 100) ? workingLevel : 100
+            workingLevel = (workingLevel > 0) ? workingLevel : 0
+            // log.debug "Final level for ${device} is ${workingLevel}"
+            device.setLevel(workingLevel)
+            newLevels << workingLevel
+        }
+        startLevels = newLevels
+        // (1..1000).each {}
+        if (!atomicState.dimmingNow)
+            break
+    }
+}
+
+def updateLights(evt)
+{
+//    log.debug "updateLights evt = ${evt}"
+//    log.debug "Button 1: ${switches_1*.currentValue('switch')}"
+//    log.debug "Button 2: ${switches_2*.currentValue('switch')}"
+//    log.debug "Button 3: ${switches_3*.currentValue('switch')}"
+//    log.debug "Button 4: ${switches_4*.currentValue('switch')}"
+//    def one = switches_1*.currentValue('switch').contains('on')
+//    def two = switches_2*.currentValue('switch').contains('on')
+//    def three = switches_3*.currentValue('switch').contains('on')
+//    def four = switches_4*.currentValue('switch').contains('on')
+//    buttonDevice.setLightStatus((one ? color_1 : 0),(two ? color_2 : 0),(three ? color_3 : 0) , (four ? color_4 : 0))
+}
